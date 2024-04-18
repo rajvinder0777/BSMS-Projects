@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Random;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -61,11 +60,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Integer, String> getStates(Integer cid) {
+	public Map<Integer, String> getStates(CountryEntity countryId) {
 
 		Map<Integer, String> stateMap = new HashMap<>();
 
-		List<StateEntity> stateList = stateRepo.getState(cid);
+		List<StateEntity> stateList = stateRepo.findByCountry(countryId);
 
 		stateList.forEach(c -> {
 			stateMap.put(c.getStateId(), c.getStateName());
@@ -75,11 +74,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Integer, String> getCities(Integer sid) {
+	public Map<Integer, String> getCities(StateEntity stateId) {
 
 		Map<Integer, String> cityMap = new HashMap<>();
 
-		List<CityEntity> cityList = cityRepo.getCity(sid);
+		List<CityEntity> cityList = cityRepo.findByState(stateId);
 
 		cityList.forEach(c -> {
 			cityMap.put(c.getCityId(), c.getCityName());

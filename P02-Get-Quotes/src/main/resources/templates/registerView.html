@@ -1,39 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>QuoteGenerator</title>
-	<!-- Bootstrap CSS -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Register - </title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<!-- Custom CSS -->
-	<style>
-		/* Custom styles */
-		.logout-btn {
-			color: red;
-		}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
 
-		/* Footer style */
-		footer {
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			background-color: #343a40;
-			color: #fff;
-			padding: 20px 0;
-		}
+<style>
+	/* Custom styles */
+	.logout-btn {
+		color: red;
+	}
 
-		/* Quote style */
-		.quote {
-			color: blue;
-			font-size: 24px;
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-			margin-top: 20px;
-			text-align: center;
-		}
-	</style>
+	/* Footer style */
+	footer {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		background-color: #343a40;
+		color: #fff;
+		padding: 20px 0;
+	}
+
+	/* Quote style */
+	.quote {
+		color: blue;
+		font-size: 24px;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		margin-top: 20px;
+		text-align: center;
+	}
+</style>
+<!--	<script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
+	-->
 </head>
 
 <body>
@@ -61,9 +64,7 @@
 						<li class="nav-item">
 							<a class="nav-link" href="#">Contact</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link btn btn-danger" href="/">Logout</a>
-						</li>
+						
 					</ul>
 
 				</div>
@@ -87,8 +88,6 @@
 				</font>
 
 
-
-
 				<table>
 					<tr>
 						<td>Name:</td>
@@ -104,21 +103,21 @@
 					</tr>
 					<tr>
 						<td>Country:</td>
-						<td><select th:field="*{countryId}" id="countryId" class="form-select" required>
+						<td><select th:field="*{countryId}" id="country" class="form-select" required>
 								<option value="">-Select-</option>
-								<option th:each="entry:${countries.entrySet()}" th:value="${entry.key}"
-									th:text="${entry.value}" />
+								<option th:each="country:${countries.entrySet()}" th:value="${country.key}"
+									th:text="${country.value}" />
 							</select></td>
 					</tr>
 					<tr>
 						<td>State:</td>
-						<td><select th:field="*{stateId}" id="stateId" class="form-select" required>
+						<td><select th:field="*{stateId}" id="state" class="form-select" required>
 								<option value="">-Select-</option>
 							</select></td>
 					</tr>
 					<tr>
 						<td>City:</td>
-						<td><select th:field="*{cityId}" id="cityId" class="form-select" required>
+						<td><select th:field="*{cityId}" id="city" class="form-select" required>
 								<option value="">-Select-</option>
 							</select></td>
 					</tr>
@@ -133,64 +132,57 @@
 				<p class="text-center">Already have an account? <a href="/">Login here</a></p>
 		</div>
 		</form>
+		<p th:if="${smsg != null}" class="text-success text-center">Registration Successful...</p>
 	</div>
 	<!-- Ajax and JQuery Script -->
 
 	<script>
-
 		$(document).ready(function () {
-
-			$("#countryId").on("change", function () {
-
-				$('#stateId').find('option').remove();
-				$('#cityId').find('option').remove();
-
-				$('<option>').val('').text('-Select-').appendTo("#stateId");
-				$('<option>').val('').text('-Select-').appendTo("#cityId");
-
-				var cid = $('#countryId').val();
+			$('#country').change(function () {
+				$('#state').find('option').remove();
+				$('#city').find('option').remove();
+				$('<option>').val('').text('select state').appendTo('#state');
+				$('<option>').val('').text('select city').appendTo('#city');
 				$.ajax({
 					type: 'GET',
-					url: '/states/' + cid,
+					url: '/states',
+					data: {countryId: $(this).val()},
 					success: function (response) {
-						console.log(response);
 						$.each(response, function (key, value) {
-							$('<option>').val(key).text(value).appendTo("#stateId");
+							$('<option>').val(key).text(value).appendTo("#state");
 						});
 					}
 				});
 			});
-
-			$("#stateId").on("change", function () {
-
-				$('#cityId').find('option').remove();
-				$('<option>').val('').text('-Select-').appendTo("#cityId");
-
-
-				var sid = $('#stateId').val();
+			$('#state').change(function () {
+				$('#city').find('option').remove();
+				$('<option>').val('').text('select city').appendTo('#city');
 				$.ajax({
 					type: 'GET',
-					url: '/cities/' + sid,
+					url: '/cities',
+					data: {stateId: $(this).val()},
 					success: function (response) {
-						console.log(response);
 						$.each(response, function (key, value) {
-							$('<option>').val(key).text(value).appendTo("#cityId");
+							$('<option>').val(key).text(value).appendTo("#city");
 						});
 					}
 				});
 			});
 		});
-
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+<!-- Footer -->
+	
 
-
-	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Footer -->
-	<footer>
+	<!-- Bootstrap JS (optional) -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+<footer style="text-align: center;">
 		<div class="container">
-			<p>&copy; 2024 QuoteGenerator. All rights reserved.</p>
+			Copyright © 2024 Apple Inc. All rights reserved &nbsp;&nbsp;&nbsp;&nbsp;  |&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="color: white; text-decoration: none;">Privacy</a>&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" style="color: white; text-decoration: none;">Policy</a> &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" style="color: white; text-decoration: none;">Terms of Use</a> &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" style="color: white; text-decoration: none;">Sales Policy</a>&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="color: white; text-decoration: none;">Legal Site Map</a>
 		</div>
 	</footer>
 

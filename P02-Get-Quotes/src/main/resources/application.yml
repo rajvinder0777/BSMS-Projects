@@ -1,0 +1,36 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: MYSQL
+    url: jdbc:mysql://localhost:3306/mysqldb
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    password: otuh gnqb iimt ivty
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: goldyraj2710@gmail.com
+
+    
+    
+  app:
+   message:
+    dupEmail: Duplicate Emial
+    regSucc: User Registered
+    regFail: Regsitration Failed
+    invalidCredentials: Invalid Credentials
+    pwdMatchErr: New password and old password should be same
+    pwdUpdateErr: Password Update Failed
+    oldPwdErro: Given Old Password is wrong
+    
